@@ -1,0 +1,253 @@
+<div>
+    <div id="divTracker" class="div-tracker">
+        <div id="divToken" class="div-token"></div>
+    </div>
+    <div id="divWeather" class="div-weather">
+    </div>
+</div>
+<button name="updateStatus" id="updateStatus" style="visibility: hidden;" class="update-btn">SAVE</button>
+<script>
+    $(function () {
+
+        let weatherTable = game.settings.get('quarter-tracker', 'weather-table');
+        console.log('quarter-tracker | Weather setting: ' + weatherTable);
+
+        if (weatherTable == 'None') {
+            $('#divWeather').addClass('hidden');
+        }
+
+        let prg = window.quarterTracker.datamanager.progress();
+        console.log('quarter-tracker | ' + JSON.stringify(prg));
+        $('#divWeather').text(prg.progress.weather[0]);
+
+        if (prg.progress.quarter == 1) {
+            $('#divToken').addClass('morning');
+        }
+        if (prg.progress.quarter == 2) {
+            $('#divToken').addClass('day');
+        }
+        if (prg.progress.quarter == 3) {
+            $('#divToken').addClass('evening');
+        }
+        if (prg.progress.quarter == 4) {
+            $('#divToken').addClass('night');
+        }
+
+        $('#divTracker').on('click', function () {
+            let qtr = 0;
+            if ($('#divToken').hasClass('night')) {
+                $('#divToken').removeClass('night');
+                $('#divToken').addClass('morning');
+                qtr = 1;
+                let weather = generateWeather(weatherTable);
+                $('#divWeather').text(weather);
+                if (weatherTable != 'None') {
+                    let chatData = {
+                        content: "<b>Weather</b>: " + weather,
+                    };
+                    ChatMessage.create(chatData, {});                    
+                }
+            } else {
+                if ($('#divToken').hasClass('evening')) {
+                    $('#divToken').removeClass('evening');
+                    $('#divToken').addClass('night');
+                    qtr = 4;
+                }
+                if ($('#divToken').hasClass('day')) {
+                    $('#divToken').removeClass('day');
+                    $('#divToken').addClass('evening');
+                    qtr = 3;
+                }
+                if ($('#divToken').hasClass('morning')) {
+                    $('#divToken').removeClass('morning');
+                    $('#divToken').addClass('day');
+                    qtr = 2;
+                }
+            }
+            $('#updateStatus').text(qtr.toString());
+            $('#updateStatus').click();
+        });
+
+        $('.update-btn').on('click', function () {
+            console.log('quarter-tracker | SAVING...');
+            let current = {
+                'quarter': $('#updateStatus').text(),
+                'weather': []
+            };
+            current.weather.push($('#divWeather').text());
+            console.log('quarter-tracker | ' + JSON.stringify(current));
+            window.quarterTracker.datamanager.updateProgress(current);
+        });
+
+        function generateWeather(wt) {
+            console.log('quarter-tracker | generating weather for ' + wt + "...");
+            let weather = '';
+            if (wt == 'rl') {
+                let dies = new Roll("3d6").evaluate({ async: false });
+                weather = getRavenlandsWeather(dies.terms[0].results[0].result,
+                    dies.terms[0].results[1].result,
+                    dies.terms[0].results[2].result);
+            }
+            if (wt == 'br') {
+                let dies = new Roll("3d6").evaluate({ async: false });
+                weather = getBitterReachWeather(dies.terms[0].results[0].result,
+                    dies.terms[0].results[1].result,
+                    dies.terms[0].results[2].result);
+            }
+            if (wt == 'bm') {
+                let dies = new Roll("3d6").evaluate({ async: false });
+                weather = getBloodmarchWeather(dies.terms[0].results[0].result,
+                    dies.terms[0].results[1].result,
+                    dies.terms[0].results[2].result);
+            }
+            return weather;
+        }
+
+        function getRavenlandsWeather(wind, rain, temp) {
+            let weather = '';
+            switch (wind) {
+                case 1:
+                    weather = weather + 'Wind: None. ';
+                    break;
+                case 2:
+                    weather = weather + 'Wind: None. ';
+                    break;
+                case 3:
+                    weather = weather + 'Wind: Breeze. ';
+                    break;
+                case 4:
+                    weather = weather + 'Wind: Breeze. ';
+                    break;
+                case 5:
+                    weather = weather + 'Wind: Gales. ';
+                    break;
+                case 6:
+                    weather = weather + 'Wind: Storm. ';
+                    break;
+                default:
+                    break;
+            }
+            switch (rain) {
+                case 1:
+                    weather = weather + 'Rain: Clear skies. ';
+                    break;
+                case 2:
+                    weather = weather + 'Rain: None. ';
+                    break;
+                case 3:
+                    weather = weather + 'Rain: None. ';
+                    break;
+                case 4:
+                    weather = weather + 'Rain: None. ';
+                    break;
+                case 5:
+                    weather = weather + 'Rain: Drizzle (rain or snow). ';
+                    break;
+                case 6:
+                    weather = weather + 'Rain: Downpour (rain or snow). ';
+                    break;
+                default:
+                    break;
+            }
+            switch (temp) {
+                case 1:
+                    weather = weather + 'Temp: Hot. ';
+                    break;
+                case 2:
+                    weather = weather + 'Temp: Pleasant. ';
+                    break;
+                case 3:
+                    weather = weather + 'Temp: Pleasant. ';
+                    break;
+                case 4:
+                    weather = weather + 'Temp: Pleasant. ';
+                    break;
+                case 5:
+                    weather = weather + 'Temp: Pleasant. ';
+                    break;
+                case 6:
+                    weather = weather + 'Temp: Cool. ';
+                    break;
+                default:
+                    break;
+            }
+            return weather;
+        }
+
+        function getBitterReachWeather(wind, rain, temp) {
+            let weather = '';
+            switch (wind) {
+                case 1:
+                    weather = weather + 'Wind: Light breeze. ';
+                    break;
+                case 2:
+                    weather = weather + 'Wind: Light breeze. ';
+                    break;
+                case 3:
+                    weather = weather + 'Wind: Light breeze. ';
+                    break;
+                case 4:
+                    weather = weather + 'Wind: Strong wind. ';
+                    break;
+                case 5:
+                    weather = weather + 'Wind: Strong wind. ';
+                    break;
+                case 6:
+                    weather = weather + 'Wind: Storm. ';
+                    break;
+                default:
+                    break;
+            }
+            switch (rain) {
+                case 1:
+                    weather = weather + 'Snow: None. ';
+                    break;
+                case 2:
+                    weather = weather + 'Snow: None. ';
+                    break;
+                case 3:
+                    weather = weather + 'Snow: None. ';
+                    break;
+                case 4:
+                    weather = weather + 'Snow: Light flurries. ';
+                    break;
+                case 5:
+                    weather = weather + 'Snow: Light flurries. ';
+                    break;
+                case 6:
+                    weather = weather + 'Snow: Heavy snowfall. ';
+                    break;
+                default:
+                    break;
+            }
+            switch (temp) {
+                case 1:
+                    weather = weather + 'Cold: Cold. ';
+                    break;
+                case 2:
+                    weather = weather + 'Cold: Cold. ';
+                    break;
+                case 3:
+                    weather = weather + 'Cold: Cold. ';
+                    break;
+                case 4:
+                    weather = weather + 'Cold: Biting. ';
+                    break;
+                case 5:
+                    weather = weather + 'Cold: Biting. ';
+                    break;
+                case 6:
+                    weather = weather + 'Cold: To the bone. ';
+                    break;
+                default:
+                    break;
+            }
+            return weather;
+        }
+
+        function getBloodmarchWeather(wind, rain, temp) {
+            return getRavenlandsWeather(wind, rain, temp);
+        }
+
+    });
+</script>
