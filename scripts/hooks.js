@@ -11,8 +11,11 @@ Hooks.once('init', () => {
   console.log('quarter-tracker | Initialization Complete.')
 });
 
-Hooks.once('ready', () => {
-  
+Hooks.once('ready', () => {  
+  let newData = { progress: { 'quarter': 1, 'weather': [] } };
+  if (window.quarterTracker.datamanager.get() == null) {
+    window.quarterTracker.datamanager.set(newData);
+  }
 });
 
 Hooks.on('renderActorDirectory', (app, html, data) => {
@@ -43,12 +46,6 @@ class TrackerDashboard extends Application {
 
   activateListeners(html) {
     super.activateListeners(html);
-
-    //html.find('.div-tracker').click(ev => {
-    //  console.log('quarter-tracker | Updating quarter...')
-    //  this.render(true);
-    //});
-
   }  
 
   redraw(force) {
@@ -79,18 +76,16 @@ class TrackerDataManager {
   }
 
   register() {
-    let newData = { progress: { 'quarter': 1, 'weather': [] } };
     console.log('quarter-tracker | registering settings...')
     
     // register save data setting
     game.settings.register('quarter-tracker', 'quarter-data', {
       name: "Quarter Tracker",
-      scope: "client",
+      scope: "world",
       config: false,
       type: Object,
       default: null
     });
-    this.set(newData);
 
     // register weather table setting
     game.settings.register('quarter-tracker', 'weather-table', {
