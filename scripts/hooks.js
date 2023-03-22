@@ -11,7 +11,7 @@ Hooks.once('init', () => {
   console.log('quarter-tracker | Initialization Complete.')
 });
 
-Hooks.once('ready', () => {  
+Hooks.once('ready', () => {
   let newData = { progress: { 'quarter': 1, 'weather': [] } };
   if (window.quarterTracker.datamanager.get() == null) {
     window.quarterTracker.datamanager.set(newData);
@@ -46,7 +46,7 @@ class TrackerDashboard extends Application {
 
   activateListeners(html) {
     super.activateListeners(html);
-  }  
+  }
 
   redraw(force) {
     this.render(force);
@@ -77,7 +77,7 @@ class TrackerDataManager {
 
   register() {
     console.log('quarter-tracker | registering settings...')
-    
+
     // register save data setting
     game.settings.register('quarter-tracker', 'quarter-data', {
       name: "Quarter Tracker",
@@ -98,10 +98,14 @@ class TrackerDataManager {
         "None": "None",
         "rl": "Ravenlands",
         "br": "Bitter Reach",
-        "bm": "Bloodmarch"
+        "bm": "Bloodmarch",
+        "tw2k": "Twilight 2000"
       },
       onChange: value => { // value is the new value of the setting
         console.log('quarter-tracker | New weathe table value = ' + value);
+        if (value == "tw2k") {
+          window.quarterTracker.datamanager.clearProgress();
+        }
       },
     });
 
