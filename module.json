@@ -1,25 +1,21 @@
 {
-	"name": "quarter-tracker",
+	"id": "quarter-tracker",
 	"title": "Quarter Tracker",
 	"description": "Adds a screen to track quarter for Forbidden Lands",
 	"version": "1.0.0",
-	"minimumCoreVersion" : "10.288",
-    "compatibleCoreVersion" : 10,
-    "compatibility": {
-        "minimum": 10,
-        "verified": "10.288"
-    },
-    "author": "Reichenau, cody",
+	"compatibility": {
+	  "minimum": 12,
+	  "verified": 14
+	},	
     "authors": [
         {
             "name": "Cody Reichenau",
             "discord": ""
         }
     ],
-	"download": "https://raw.githubusercontent.com/creichenau/quarter-tracker/main/quarter-tracker.zip",
-	"scripts": [
-		"scripts/hooks.js"
-	],
+	"esmodules": ["scripts/hooks.js"],
+	"manifest": "https://raw.githubusercontent.com/creichenau/quarter-tracker/main/module.json",
+	"download": "https://github.com/creichenau/quarter-tracker/archive/refs/heads/main.zip",
 	"styles": [
 		"styles/styles.css"
 	]
