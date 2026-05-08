@@ -1,35 +1,3 @@
-Hooks.once('init', () => {
-  console.log('quarter-tracker | Initializing...')
-
-  window.quarterTracker = {
-    dashboard: new TrackerDashboard(),
-    datamanager: new TrackerDataManager()
-  }
-
-  window.quarterTracker.datamanager.register();
-
-  console.log('quarter-tracker | Initialization Complete.')
-});
-
-Hooks.once('ready', () => {
-  let newData = { progress: { 'quarter': 1, 'weather': [] } };
-  if (window.quarterTracker.datamanager.get() == null) {
-    window.quarterTracker.datamanager.set(newData);
-  }
-});
-
-Hooks.on('renderActorDirectory', (app, html, data) => {
-  html
-    .find(".directory-header")
-    .prepend(`<div class="action-buttons flexrow"><button id="btn-dashboard">Quarter Tracker</div>`)
-    .promise()
-    .done(() => {
-      $('#btn-dashboard').on('click', e => {
-        window.quarterTracker.dashboard.redraw(true);
-      });
-    })
-});
-
 class TrackerDashboard extends Application {
 
   static get defaultOptions() {
@@ -120,3 +88,35 @@ class TrackerDataManager {
     game.settings.set('quarter-tracker', 'quarter-data', value)
   }
 }
+
+Hooks.once('init', () => {
+  console.log('quarter-tracker | Initializing...')
+
+  window.quarterTracker = {
+    dashboard: new TrackerDashboard(),
+    datamanager: new TrackerDataManager()
+  }
+
+  window.quarterTracker.datamanager.register();
+
+  console.log('quarter-tracker | Initialization Complete.')
+});
+
+Hooks.once('ready', () => {
+  let newData = { progress: { 'quarter': 1, 'weather': [] } };
+  if (window.quarterTracker.datamanager.get() == null) {
+    window.quarterTracker.datamanager.set(newData);
+  }
+});
+
+Hooks.on('renderActorDirectory', (app, html, data) => {
+  html
+    .find(".directory-header")
+    .prepend(`<div class="action-buttons flexrow"><button id="btn-dashboard">Quarter Tracker</div>`)
+    .promise()
+    .done(() => {
+      $('#btn-dashboard').on('click', e => {
+        window.quarterTracker.dashboard.redraw(true);
+      });
+    })
+});
